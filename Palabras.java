@@ -6,26 +6,37 @@ public class Palabras {
 
     private Scanner sc;
     
-    pblic Palabras() {
+    public Palabras() {
 	sc = new Scanner(System.in);
     }
     
     public String pideSecuencia() {
 	String s = "";
-
-	while(s.isEmpty()) {
-	    System.out.println("Ingresa las letras que usaras (9 letras)");
+	
+	while(!secuenciaValida(s)) {
+	    if (!s.isEmpty()) 
+		System.out.println("Secuencia de letras invalida. Intenta de nuevo.");
+	    
+	    System.out.println("Ingresa la secuencia de letras (9 letras)");
+	    s = sc.nextLine().trim();
 	}
+	return normalizar(s);
     }
 
+    public void cerrarScanner() {
+        if (sc != null) {
+            sc.close();
+        }
+    }
+    
     private boolean secuenciaValida(String s) {
-
 	if (s == null)
-	    throw new IllegalArgumentException("No aceptamos strings nulos");
-	if (s.isEmpty() || s.length() != 9)
+	    throw new IllegalArgumentException("No aceptamos entradas nulas, bobo");
+	if (s.length() != 9)
 	    return false;
+	
 	for(char a: s.toCharArray()) {
-	    if(!Character.isLetter(a))
+	    if (!Character.isLetter(a))
 		return false;
 	}
 	return true;
@@ -35,6 +46,13 @@ public class Palabras {
 	if (s == null)
 	    return "";
 	String sPrima = Normalizer.normalize(s, Normalizer.Form.NFD);
-	
+
+	StringBuilder stb = new StringBuilder();
+
+	for (char a : sPrima.toCharArray()) {
+	    if (Character.isLetter(a))
+		stb.append(Character.toUpperCase(a));
+	}
+	return stb.toString();
     }
 }

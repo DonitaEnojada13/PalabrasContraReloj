@@ -2,3 +2,8 @@
 bin/
 .bin/
 .DS_Store
+
+# Archivos temporales de respaldo de Emacs y otros editores
+*~
+\#*\#
+.#*
