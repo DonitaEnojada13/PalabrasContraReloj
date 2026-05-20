@@ -5,9 +5,9 @@ public class ArbolAVL<T extends Comparable<T>>{
 
   private class Nodo{
 
-    private T elemento;
-    private Nodo padre, izquierdo, derecho;
-    private int altura;
+    T elemento;
+    Nodo padre, izquierdo, derecho;
+    int altura;
 
     public Nodo(T elemento){
       this.elemento = elemento;

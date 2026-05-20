@@ -2,8 +2,8 @@ public class MapaHash<K extends Comparable<K>, V> {
     //expresiones regulares
 
     private class Entrada implements Comparable<Entrada>{
-		private K llave;
-		private	 V valor;
+		K llave;
+		V valor;
 
 		public Entrada(K llave, V valor, boolean estado) {
 	    	this.llave = llave;	
