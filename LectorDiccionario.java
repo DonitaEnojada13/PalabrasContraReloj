@@ -7,4 +7,5 @@ public class LectorDiccionario {
      * ver si me sale esto, sigo sin entender a ciencia cierta
      * lo que son lo buffer reader y esas cosas
      */
+    
 }
