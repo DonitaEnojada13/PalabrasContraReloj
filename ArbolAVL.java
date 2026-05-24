@@ -60,7 +60,8 @@ public class ArbolAVL<T extends Comparable<T>>{
 	    return actual;
 	}
 	
-	actual.altura = this.alturaNodo(actual);
+	actual.altura = 1 + Math.max(alturaNodo(actual.izquierdo), alturaNodo(actual.derecho));
+	
 	return this.balanceo(actual); //cambiar
     }
     
@@ -95,7 +96,7 @@ public class ArbolAVL<T extends Comparable<T>>{
 	    }
 	}
 	
-	actual.altura = this.alturaNodo(actual);
+	actual.altura = 1 + Math.max(alturaNodo(actual.izquierdo), alturaNodo(actual.derecho));
 	return this.balanceo(actual);
     }
     
@@ -104,9 +105,7 @@ public class ArbolAVL<T extends Comparable<T>>{
     }
     
     private int alturaNodo(Nodo nodo){
-	if(nodo == null) return 0;
-	
-	return 1 + Math.max(alturaNodo(nodo.izquierdo), alturaNodo(nodo.derecho));
+	return (nodo == null) ? 0 : nodo.altura;
     }
     
     public int profundidad(T elemento){
@@ -147,8 +146,8 @@ public class ArbolAVL<T extends Comparable<T>>{
 	y.izquierdo = x;
 	x.padre = y;
 	
-	x.altura = this.alturaNodo(x);
-	y.altura = this.alturaNodo(y);
+	x.altura = 1 + Math.max(alturaNodo(x.izquierdo), alturaNodo(x.derecho));
+	y.altura = 1 + Math.max(alturaNodo(y.izquierdo), alturaNodo(y.derecho));
 	
 	return y; //Nueva subraíz del árbol
     }
@@ -172,8 +171,8 @@ public class ArbolAVL<T extends Comparable<T>>{
 	y.derecho = x;
 	x.padre = y;
 	
-	x.altura = this.alturaNodo(x);
-	y.altura = this.alturaNodo(y);
+	x.altura = 1 + Math.max(alturaNodo(x.izquierdo), alturaNodo(x.derecho));
+	y.altura = 1 + Math.max(alturaNodo(y.izquierdo), alturaNodo(y.derecho));
 	
 	return y; //nueva raíz del subárbol kjrfajlajkl
     }
