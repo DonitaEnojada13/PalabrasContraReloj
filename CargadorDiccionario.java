@@ -13,9 +13,7 @@ public class CargadorDiccionario {
     }
     
     public boolean esUsable() {
-        if (!ruta.exists() ||  !ruta.isDirectory())
-            return false;
-        return true;
+	return ruta.exists() && ruta.isDirectory();
     }
 
     /**
@@ -47,12 +45,13 @@ public class CargadorDiccionario {
     public File eligeDiccionario(File[] arr, int i) {
 	if (arr == null)
 	    throw new IllegalArgumentException("No se aceptan arreglos nulos, bobo");
-	if (arr.length == 0){
-	    System.out.println("El arreglo esta vacio, no hay diccionario para elegir, bobo");
-	    return null;
-	}
+
+	if (arr.length == 0)
+	    throw new IllegalStateException("No hay diccionarios disponibles en la ruta.");
+
 	if (i < 0 || i >= arr.length)
 	    throw new IndexOutOfBoundsException();
+
 	return arr[i];	
     }
     
