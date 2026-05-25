@@ -22,6 +22,12 @@ public class ArbolAVL<T extends Comparable<T>>{
 	}
     }
 
+    private boolean contains(T elemento) {
+	if (elemento == null)
+	    return false;
+	return this.buscar(elemento);
+    }
+    
     public T buscar(T elemento) {
 	return buscar(raiz, elemento);
     }
@@ -206,4 +212,22 @@ public class ArbolAVL<T extends Comparable<T>>{
 	}
 	return nodo;
     }
+    public void dfsInOrden() {
+	if (this.raiz == null) {
+	    System.out.println("No hay palabras, hay que leer mas, bobo");
+            return;
+	}
+	
+	dfsInOrden(this.raiz);
+        System.out.println();
+	
+    }
+    private void dfsInOrden(Nodo a) {
+	if (actual == null)
+            return;
+	dfsInorden(a.izquierdo);
+        System.out.print(a.elemento);
+        dfsInorden(a.derecho);
+    }
+    
 }
