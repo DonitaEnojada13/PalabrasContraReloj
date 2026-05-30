@@ -22,212 +22,214 @@ public class ArbolAVL<T extends Comparable<T>>{
 	}
     }
 
-    private boolean contains(T elemento) {
+    public boolean contains(T elemento) {
 	if (elemento == null)
 	    return false;
-	return this.buscar(elemento);
+	return this.buscar(elemento) != null;
     }
     
     public T buscar(T elemento) {
-	return buscar(raiz, elemento);
+		return buscar(raiz, elemento);
     }
     
     private T buscar(Nodo a, T elemento) {
-	if (a == null)
-	    return null;
-	if (elemento.compareTo(a.elemento) == 0)
-	    return a.elemento;
-	if(elemento.compareTo(a.elemento) < 0) {
-	    return buscar(a.izquierdo, elemento);
-	} else {
-	    return buscar(a.derecho, elemento);
-	}
+		if (a == null)
+			return null;
+		if (elemento.compareTo(a.elemento) == 0)
+			return a.elemento;
+		if(elemento.compareTo(a.elemento) < 0) {
+			return buscar(a.izquierdo, elemento);
+		} else {
+			return buscar(a.derecho, elemento);
+		}
     }
     
     //Inicio de los métodos del AVL
     public void agregar(T elemento){
-	this.raiz = agregar(this.raiz, elemento);
+		this.raiz = agregar(this.raiz, elemento);
     }
     
     private Nodo agregar(Nodo actual, T elemento){
-	if(actual == null){
-	    size++;
-	    return new Nodo(elemento);
-	}
+		if(actual == null){
+			size++;
+			return new Nodo(elemento);
+		}
 	
-	if(elemento.compareTo(actual.elemento) < 0){
-	    actual.izquierdo = agregar(actual.izquierdo, elemento);
-	    actual.izquierdo.padre = actual;
-	    
-	}else if(elemento.compareTo(actual.elemento) > 0){
-	    actual.derecho = agregar(actual.derecho, elemento);
-	    actual.derecho.padre = actual;
-	}else{
-	    return actual;
-	}
-	
-	actual.altura = 1 + Math.max(alturaNodo(actual.izquierdo), alturaNodo(actual.derecho));
-	
-	return this.balanceo(actual); //cambiar
+		if(elemento.compareTo(actual.elemento) < 0){
+			actual.izquierdo = agregar(actual.izquierdo, elemento);
+			actual.izquierdo.padre = actual;
+			
+		}else if(elemento.compareTo(actual.elemento) > 0){
+			actual.derecho = agregar(actual.derecho, elemento);
+			actual.derecho.padre = actual;
+		}else{
+			return actual;
+		}
+		
+		actual.altura = 1 + Math.max(alturaNodo(actual.izquierdo), alturaNodo(actual.derecho));
+		
+		return this.balanceo(actual); //cambiar
     }
     
     public void eliminar(T elemento){
-	this.raiz = eliminar(this.raiz, elemento);
+		this.raiz = eliminar(this.raiz, elemento);
     }
     
     private Nodo eliminar(Nodo actual, T elemento){
-	if(actual == null) return null;
-	
-	if(elemento.compareTo(actual.elemento) < 0){
-	    actual.izquierdo = eliminar(actual.izquierdo, elemento);
-	}else if(elemento.compareTo(actual.elemento) > 0){
-	    actual.derecho = eliminar(actual.derecho, elemento);
-	}else{
-	    
-	    if(actual.izquierdo == null && actual.derecho == null){
-		size--;
-		return null;
-	    }else if(actual.izquierdo == null){
-		size--;
-		actual.derecho.padre = actual.padre;
-		return actual.derecho;
-	    }else if(actual.derecho == null){
-		size--;
-		actual.izquierdo.padre = actual.padre;
-		return actual.izquierdo;
-	    }else{
-		Nodo sucesor = encontrarMin(actual.derecho);
-		actual.elemento = sucesor.elemento;
-		actual.derecho = eliminar(actual.derecho, sucesor.elemento);  
-	    }
-	}
-	
-	actual.altura = 1 + Math.max(alturaNodo(actual.izquierdo), alturaNodo(actual.derecho));
-	return this.balanceo(actual);
+		if(actual == null) return null;
+		
+		if(elemento.compareTo(actual.elemento) < 0){
+			actual.izquierdo = eliminar(actual.izquierdo, elemento);
+		}else if(elemento.compareTo(actual.elemento) > 0){
+			actual.derecho = eliminar(actual.derecho, elemento);
+		}else{
+			
+			if(actual.izquierdo == null && actual.derecho == null){
+			size--;
+			return null;
+			}else if(actual.izquierdo == null){
+			size--;
+			actual.derecho.padre = actual.padre;
+			return actual.derecho;
+			}else if(actual.derecho == null){
+			size--;
+			actual.izquierdo.padre = actual.padre;
+			return actual.izquierdo;
+			}else{
+			Nodo sucesor = encontrarMin(actual.derecho);
+			actual.elemento = sucesor.elemento;
+			actual.derecho = eliminar(actual.derecho, sucesor.elemento);  
+			}
+		}
+		
+		actual.altura = 1 + Math.max(alturaNodo(actual.izquierdo), alturaNodo(actual.derecho));
+		return this.balanceo(actual);
     }
     
     public int altura(){
-	return alturaNodo(raiz);
+		return alturaNodo(raiz);
     }
     
     private int alturaNodo(Nodo nodo){
-	return (nodo == null) ? 0 : nodo.altura;
+		return (nodo == null) ? 0 : nodo.altura;
     }
     
     public int profundidad(T elemento){
-	return profundidad(raiz, elemento, 0);
+		return profundidad(raiz, elemento, 0);
     }
     
     private int profundidad(Nodo nodo, T elemento, int nivel){
-	if(nodo == null) return -1;
-	
-	if(nodo.elemento.equals(elemento)) return nivel;
-	
-	if(elemento.compareTo(nodo.elemento) < 0){
-	    return profundidad(nodo.izquierdo, elemento, nivel + 1);
-	}else{
-	    return profundidad(nodo.derecho, elemento, nivel + 1);
-	}
+		if(nodo == null) return -1;
+		
+		if(nodo.elemento.equals(elemento)) return nivel;
+		
+		if(elemento.compareTo(nodo.elemento) < 0){
+			return profundidad(nodo.izquierdo, elemento, nivel + 1);
+		}else{
+			return profundidad(nodo.derecho, elemento, nivel + 1);
+		}
     }
     
     
     //Metodos de rotación y otras cosas
     private Nodo rotacionIzq(Nodo x){
-	Nodo y = x.derecho;
-	x.derecho = y.izquierdo;
-	
-	if(y.izquierdo != null){
-	    y.izquierdo.padre = x;
-	}
-	
-	y.padre = x.padre;
-	if(x.padre == null){
-	    this.raiz = y;
-	}else if(x.equals(x.padre.izquierdo)){
-	    x.padre.izquierdo = y;
-	}else{
-	    x.padre.derecho = y;
-	}
-	
-	y.izquierdo = x;
-	x.padre = y;
-	
-	x.altura = 1 + Math.max(alturaNodo(x.izquierdo), alturaNodo(x.derecho));
-	y.altura = 1 + Math.max(alturaNodo(y.izquierdo), alturaNodo(y.derecho));
-	
-	return y; //Nueva subraíz del árbol
+		Nodo y = x.derecho;
+		x.derecho = y.izquierdo;
+		
+		if(y.izquierdo != null){
+			y.izquierdo.padre = x;
+		}
+		
+		y.padre = x.padre;
+		if(x.padre == null){
+			this.raiz = y;
+		}else if(x.equals(x.padre.izquierdo)){
+			x.padre.izquierdo = y;
+		}else{
+			x.padre.derecho = y;
+		}
+		
+		y.izquierdo = x;
+		x.padre = y;
+		
+		x.altura = 1 + Math.max(alturaNodo(x.izquierdo), alturaNodo(x.derecho));
+		y.altura = 1 + Math.max(alturaNodo(y.izquierdo), alturaNodo(y.derecho));
+		
+		return y; //Nueva subraíz del árbol
     }
+
     private Nodo rotacionDer(Nodo x){
-	Nodo y = x.izquierdo;
-	x.izquierdo = y.derecho;
-	
-	if(y.derecho != null){
-	    y.derecho.padre = x;
-	}
-	
-	y.padre = x.padre;
-	if(x.padre == null){
-	    this.raiz = y;
-	}else if(x.equals(x.padre.izquierdo)){
-	    x.padre.izquierdo = y;
-	}else{
-	    x.padre.derecho = y;
-	}
-	
-	y.derecho = x;
-	x.padre = y;
-	
-	x.altura = 1 + Math.max(alturaNodo(x.izquierdo), alturaNodo(x.derecho));
-	y.altura = 1 + Math.max(alturaNodo(y.izquierdo), alturaNodo(y.derecho));
-	
-	return y; //nueva raíz del subárbol kjrfajlajkl
+		Nodo y = x.izquierdo;
+		x.izquierdo = y.derecho;
+		
+		if(y.derecho != null){
+			y.derecho.padre = x;
+		}
+		
+		y.padre = x.padre;
+		if(x.padre == null){
+			this.raiz = y;
+		}else if(x.equals(x.padre.izquierdo)){
+			x.padre.izquierdo = y;
+		}else{
+			x.padre.derecho = y;
+		}
+		
+		y.derecho = x;
+		x.padre = y;
+		
+		x.altura = 1 + Math.max(alturaNodo(x.izquierdo), alturaNodo(x.derecho));
+		y.altura = 1 + Math.max(alturaNodo(y.izquierdo), alturaNodo(y.derecho));
+		
+		return y; //nueva raíz del subárbol kjrfajlajkl
     }
     
     private Nodo balanceo(Nodo nodo){
-	int balance = nodo.balance();
-	
-	if(balance > 1 && nodo.izquierdo.balance() >= 0){
-	    return rotacionDer(nodo);
-	}
-	
-	if(balance < -1 && nodo.derecho.balance() <= 0){
-	    return rotacionIzq(nodo);
-	}
-	
-	if(balance > 1 && nodo.izquierdo.balance() < 0){
-	    nodo.izquierdo = rotacionIzq(nodo.izquierdo);
-	    return rotacionDer(nodo);
-	}
-	
-	if(balance < -1 && nodo.derecho.balance() > 0){
-	    nodo.derecho = rotacionDer(nodo.derecho);
-	    return rotacionIzq(nodo);
-	}
-	return nodo;
+		int balance = nodo.balance();
+		
+		if(balance > 1 && nodo.izquierdo.balance() >= 0){
+			return rotacionDer(nodo);
+		}
+		
+		if(balance < -1 && nodo.derecho.balance() <= 0){
+			return rotacionIzq(nodo);
+		}
+		
+		if(balance > 1 && nodo.izquierdo.balance() < 0){
+			nodo.izquierdo = rotacionIzq(nodo.izquierdo);
+			return rotacionDer(nodo);
+		}
+		
+		if(balance < -1 && nodo.derecho.balance() > 0){
+			nodo.derecho = rotacionDer(nodo.derecho);
+			return rotacionIzq(nodo);
+		}
+		return nodo;
     }
     
     private Nodo encontrarMin(Nodo nodo){
-	while(nodo.izquierdo != null){
-	    nodo = nodo.izquierdo;
-	}
-	return nodo;
+		while(nodo.izquierdo != null){
+			nodo = nodo.izquierdo;
+		}
+		return nodo;
+		}
+		public void dfsInOrden() {
+		if (this.raiz == null) {
+			System.out.println("No hay palabras, hay que leer mas, bobo");
+				return;
+		}
+		
+		dfsInOrden(this.raiz);
+			System.out.println();
+		
     }
-    public void dfsInOrden() {
-	if (this.raiz == null) {
-	    System.out.println("No hay palabras, hay que leer mas, bobo");
-            return;
-	}
-	
-	dfsInOrden(this.raiz);
-        System.out.println();
-	
-    }
+
     private void dfsInOrden(Nodo a) {
-	if (actual == null)
-            return;
-	dfsInorden(a.izquierdo);
-        System.out.print(a.elemento);
-        dfsInorden(a.derecho);
+	if (a == null) return;
+
+	dfsInOrden(a.izquierdo);
+    System.out.print(a.elemento);
+    dfsInOrden(a.derecho);
     }
     
 }

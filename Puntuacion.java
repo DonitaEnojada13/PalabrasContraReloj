@@ -1,10 +1,10 @@
 public class Puntuacion {
     private int puntuacionTotal;
     private int totalPalabras;
-    private ArbolAVL palabrasJuego;
+    private ArbolAVL<String> palabrasJuego;
 
     public Puntuacion() {
-	this.palabrasJuego = new ArbolAVL<String>;
+	    this.palabrasJuego = new ArbolAVL<>();
     }
     
     public int getPuntuacionTotal() {
@@ -16,21 +16,21 @@ public class Puntuacion {
     }
 
     public boolean metePalabra(String s, int v) {
-	if(s == null)
-	    throw new IllegalArgumentException("Un string nulo, que paso aqui");
-	if (palabrasJuego.contains(s))
-	    return false;
-	
-	palabrasJuego.agregar(s);
-	puntuacionTotal += v;
-	totalPalabras++;
-	return true;
+        if(s == null)
+            throw new IllegalArgumentException("Un string nulo, que paso aqui");
+        if (palabrasJuego.contains(s))
+            return false;
+        
+        palabrasJuego.agregar(s);
+        puntuacionTotal += v;
+        totalPalabras++;
+        return true;
     }
 
     public void imprimePalabras() {
-	System.out.println("\nPalabras que metiste: ");
+        System.out.println("\nPalabras que metiste: ");
 
-	palabrasJuego.dfsInorden();
+        palabrasJuego.dfsInOrden();
     }
 
     
