@@ -110,7 +110,8 @@ public class Controlador{
     }
 
     private void jugarPartida(){
-        long tiempoLimite = pedirTiempo();
+        //long tiempoLimite = pedirTiempo();
+        long tiempoLimite = 3 * (60 * 1000);
 
         System.out.println("Inicia la partida. Ingresar palabras: ");
 
@@ -138,7 +139,7 @@ public class Controlador{
         }
     }
 
-    private long pedirTiempo(){
+    /* private long pedirTiempo(){
         long minutos = 0;
         int minMinimos = 1;
         int minMaximos = 10; // se queda a cambio;
@@ -163,7 +164,7 @@ public class Controlador{
             }
         }
        return minutos * 60 * 1000;
-    }
+    } */
 
     //Sería la parte de la normalización de las letras de que todo pase a minúsculas y así 
     //tanto esta como la de validarConSecuencia ocupamos lo de la clase Palabras no? 
