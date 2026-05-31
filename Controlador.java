@@ -4,7 +4,6 @@ import java.io.File;
 public class Controlador{
 
     private Scanner in;
-    //Aquí no sé si el diccionario debe de ir en el hash map de arboles o en un árbol aparte
     private MapaHash<String, Integer> diccionario;
     private String secuenciaActual;
     private Palabras gestorPalabras;
@@ -29,6 +28,7 @@ public class Controlador{
             configurarSecuencia();
             jugarPartida();
             mostrarResultado();
+            guardarEstadistica();
 
             System.out.println("¿Deseas jugar otra vez? s/n" );
             if(!in.nextLine().trim().equalsIgnoreCase("s")){
@@ -99,7 +99,7 @@ public class Controlador{
         do{
             System.out.println("1.- Secuencia por computadora \n2.- Secuencia por typo ");
             opcion = in.nextLine();
-        }while(!(opcion.equals("1")) || !(opcion.equals("2")));
+        }while(!(opcion.equals("1")) && !(opcion.equals("2")));
 
         if(opcion.equals("1")){
             secuenciaActual = gestorPalabras.secuenciaComputadora();
@@ -116,7 +116,7 @@ public class Controlador{
         System.out.println("Inicia la partida. Ingresar palabras: ");
 
         Cronometro cronometro = new Cronometro(tiempoLimite);
-        Thread deamonCronometro = new Thread();
+        Thread deamonCronometro = new Thread(cronometro);
         deamonCronometro.setDaemon(true);
         deamonCronometro.start();
 
@@ -203,8 +203,10 @@ public class Controlador{
     }
 
     private void mostrarResultado(){
+        int puntosObtenidos = puntuacionTotal.getPuntuacionTotal();
         System.out.println("FIN DEL JUEGO :D");
-        System.out.println("Tu puntuación es de: " + puntuacionTotal);
+        System.out.println("Tu puntuación es de: " + puntosObtenidos);
+        estadisticas.mostrarTop3(secuenciaActual);
     }
 
     private void restaurarEstado(){

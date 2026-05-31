@@ -10,7 +10,7 @@ public class Utils {
      * secuencia generada por el usuario
      */
     public String[] Normalizador(String s) {
-	
+        return null;
     }
 
     /**
@@ -25,7 +25,8 @@ public class Utils {
      * Posiblemente sean metodos privados que hagan eso por
      * separado 
      */
-    public boolean validadorHumano() {
+    public boolean validadorHumano(){
+        return false;
     }
 
     /**
@@ -33,5 +34,6 @@ public class Utils {
      * se encuentra en la
      */
     private boolean contencionSecuencia() {
+        return false;
     }
 }
