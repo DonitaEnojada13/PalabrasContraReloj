@@ -6,19 +6,17 @@ public class Controlador{
     private Scanner in;
     //Aquí no sé si el diccionario debe de ir en el hash map de arboles o en un árbol aparte
     private MapaHash<String, Integer> diccionario;
-    private MapaHash<String, Boolean> palabrasIngreso;
-    private Estadisticas estadisticas;
     private String secuenciaActual;
     private Palabras gestorPalabras;
-    private int puntuacionTotal;
+    private Estadisticas estadisticas;
+    private Puntuacion puntuacionTotal;
 
     public Controlador(){
         this.in = new Scanner(System.in);
         this.diccionario = new MapaHash<>();
-        this.palabrasIngreso = new MapaHash<>();
-        this.estadisticas = new Estadisticas();
         this.gestorPalabras = new Palabras();
-        this.puntuacionTotal = 0;
+        this.puntuacionTotal = new Puntuacion();
+        this.estadisticas = new Estadisticas();
     }
 
     public void inicio(){
@@ -42,19 +40,57 @@ public class Controlador{
     }
 
     private void cargarDiccionario(){
-        System.out.println("Cargando Diccionario ...");
+
+       CargadorDiccionario cargador = null;
+
+        while (cargador == null || !cargador.esUsable()) {
+            System.out.print("Ingresa la ruta del directorio con el diccionario: ");
+            String ruta = in.nextLine().trim();
+
+            try {
+                cargador = new CargadorDiccionario(ruta);
+                if (!cargador.esUsable()) {
+                    System.out.println("La ruta no existe o no es un directorio valido. Intenta de nuevo.");
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Ruta invalida: " + e.getMessage());
+            }
+        }
+
+        File[] archivos = cargador.listadoDocs();
+
+        if (archivos.length == 0) {
+            System.out.println("No se encontraron archivos .txt en esa ruta. El programa no puede continuar.");
+            System.exit(1);
+        }
+
+        File diccionarioElegido;
+
+        if (archivos.length == 1) {
+            diccionarioElegido = archivos[0];
+            System.out.println("Diccionario encontrado: " + diccionarioElegido.getName());
+        } else {
+            System.out.println("\nArchivos disponibles:");
+            for (int i = 0; i < archivos.length; i++) {
+                System.out.println("  " + i + ". " + archivos[i].getName());
+            }
+
+            int eleccion = -1;
+            while (eleccion < 0 || eleccion >= archivos.length) {
+                System.out.print("Elige el numero del diccionario a usar: ");
+                try {
+                    eleccion = Integer.parseInt(in.nextLine().trim());
+                } catch (NumberFormatException e) {
+                    System.out.println("Ingresa un numero valido.");
+                }
+            }
+            diccionarioElegido = cargador.eligeDiccionario(archivos, eleccion);
+        }
 
         LectorDiccionario lector = new LectorDiccionario();
-
-        File archivoTxt = new File("diccionario.txt");
-
-        if(archivoTxt.exists()){
-            lector.preparaMapa(this.diccionario, archivoTxt);
-        }else{
-            System.err.println("No hay archivos existentes pa");
-        }
-    
+        lector.preparaMapa(diccionario, diccionarioElegido);
     }
+
 
     //Para que el usuario elija si la secuencia de letras sea random o escritas por él
     private void configurarSecuencia(){
@@ -84,9 +120,14 @@ public class Controlador{
         deamonCronometro.start();
 
         while(!cronometro.haTerminado()){
+            String palabra;
             System.out.println("Tiempo Restante: " + cronometro.tiempoRestante());
             System.out.println("Ingresa Palabra: ");
-            String palabra = in.nextLine();
+            try{
+                palabra = in.nextLine();                
+            }catch(Exception e){
+                break;
+            }
 
             if(cronometro.haTerminado()){
                 System.out.println("TIEMPO TERMINADO :(");
@@ -100,7 +141,7 @@ public class Controlador{
     private long pedirTiempo(){
         long minutos = 0;
         int minMinimos = 1;
-        int minMaximos = 5; // se queda a cambio;
+        int minMaximos = 10; // se queda a cambio;
         String minutosPedidos;
 
         while(true){
@@ -126,28 +167,38 @@ public class Controlador{
 
     //Sería la parte de la normalización de las letras de que todo pase a minúsculas y así 
     //tanto esta como la de validarConSecuencia ocupamos lo de la clase Palabras no? 
-    private void procesarPalabras(String palabra){
-        String palabraNorma = palabra.trim().toLowerCase();
+    private void procesarPalabras(String entrada){
+        if (entrada.isEmpty()) return;
 
-        if(palabrasIngreso.buscar(palabraNorma) != null){
-            System.out.println("Palabra ya ingresada. No hay puntuación");
+        if (!validarConSecuencia(entrada)) {
+            System.out.println("  [!] '" + entrada + "' no se puede formar con las letras de tu secuencia.");
             return;
         }
 
-        if(!gestorPalabras.sePuedeFormar(palabraNorma)){
-            System.out.println("No se pueden formar la palabra con las letras dadas. No hay puntiación");
+        String normalizada = normalizarParaDiccionario(entrada);
+
+        Integer valor = diccionario.buscar(normalizada);
+
+        if (valor == null) {
+            System.out.println("  [!] '" + entrada + "' no esta en el diccionario.");
             return;
         }
 
-        Integer puntos = diccionario.buscar(palabraNorma);
-        if(puntos != null){
-            System.out.println("Palabra valida, se agregan " + puntos + " puntos");
-            puntuacionTotal += puntos;
-            palabrasIngreso.insertar(palabraNorma, true);
-        }else{
-            System.out.println("No existe en el diccionario pa. No hay puntuación");
-        }
+        boolean nueva = puntuacionTotal.metePalabra(normalizada, valor);
 
+        if (!nueva) {
+            System.out.println("  [!] '" + entrada + "' ya la habias ingresado.");
+        } else {
+            System.out.println("  [+] '" + entrada + "' vale " + valor + " puntos! Total: " + puntuacionTotal.getPuntuacionTotal());
+        }
+    }
+
+    private boolean validarConSecuencia(String entrada) {
+        return gestorPalabras.sePuedeFormar(entrada);
+    }
+
+    private String normalizarParaDiccionario(String s) {
+        return s.trim().toLowerCase();
     }
 
     private void mostrarResultado(){
@@ -156,8 +207,12 @@ public class Controlador{
     }
 
     private void restaurarEstado(){
-        puntuacionTotal = 0;
-        palabrasIngreso = new MapaHash<>();
+        this.puntuacionTotal = new Puntuacion();
+        this.secuenciaActual = null;
+    }
+
+    private void guardarEstadistica() {
+        estadisticas.registrarPuntaje(secuenciaActual, puntuacionTotal.getPuntuacionTotal());
     }
 
 
