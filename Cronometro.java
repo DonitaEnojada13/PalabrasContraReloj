@@ -9,9 +9,12 @@ public class Cronometro implements Runnable{
 
     @Override
     public void run() {
-        
-        for(int i = segundos; i >= 0; i--){
 
+        System.out.println("Inicio del contador");
+        for(int i = segundos; i >= 0; i--){
+            //Según yo solo hay que dejarlo así sin nada de mensajes, de
+            //eso que lo haga el controlador no? 
+            
             try{
                 Thread.sleep(1000);
             }catch(InterruptedException e){
