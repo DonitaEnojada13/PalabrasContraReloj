@@ -228,7 +228,7 @@ public class ArbolAVL<T extends Comparable<T>>{
 	if (a == null) return;
 	
 	dfsInOrden(a.izquierdo);
-	System.out.print(a.elemento);
+	System.out.println(a.elemento);
 	dfsInOrden(a.derecho);
     }
     
