@@ -15,48 +15,48 @@ public class LectorDiccionario {
      */
 
     public void preparaMapa(MapaHash<String, Integer> estructura, File diccionario) {
-        try (BufferedReader lector = new BufferedReader(new FileReader(diccionario))) {
-                String linea;
+	try (BufferedReader lector = new BufferedReader(new FileReader(diccionario))) {
+            String linea;
 
-            while ((linea = lector.readLine()) != null) {
-                    detectaLinea(linea, estructura);
-                }
-            System.out.println("Se cargo el diccionario");
-                System.out.println("Total de palabras: " + estructura.getElementos());
-
-            } catch (IOException e) {
-                System.err.println("Error de tipo: " + e.getMessage());
+	    while ((linea = lector.readLine()) != null) {
+                detectaLinea(linea, estructura);
             }
+	    System.out.println("Se cargo el diccionario");
+            System.out.println("Total de palabras: " + estructura.getElementos());
+
+        } catch (IOException e) {
+            System.err.println("Error de tipo: " + e.getMessage());
+        }
     }
     
     private void detectaLinea(String s, MapaHash<String, Integer> estructura) {
 
-        String sPrima = s.trim().toLowerCase();
+	String sPrima = s.trim().toLowerCase();
 
-        if (palabraValida(sPrima)) {
-            int v = calculaValor(sPrima.length());
-            estructura.insertar(sPrima,v);
-        }
+	if (palabraValida(sPrima)) {
+	    int v = calculaValor(sPrima.length());
+	    estructura.insertar(sPrima,v);
+	}
     }
     
     private int calculaValor(int tamano) {
-    	return tamano * tamano;
+	return tamano * tamano;
     }
     
     private boolean palabraValida(String s) {
-        if (s == null || s.isEmpty())
-            return false;
-        int largo = s.length();
-        
-        if (largo < 1 || largo > 9)
-            return false;
-        
-        for (int i = 0; i < largo; i++) {
-            char c = s.charAt(i);
-            if (!Character.isLetter(c))
-            return false;
-        }
-            return true;
+	if (s == null || s.isEmpty())
+	    return false;
+	int largo = s.length();
+	
+	if (largo < 1 || largo > 9)
+	    return false;
+	
+	for (int i = 0; i < largo; i++) {
+	    char c = s.charAt(i);
+	    if (!Character.isLetter(c))
+		return false;
+	}
+       	return true;
     }
     
 }

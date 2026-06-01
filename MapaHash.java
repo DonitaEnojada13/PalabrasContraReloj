@@ -25,8 +25,8 @@ public class MapaHash<K extends Comparable<K>, V> {
     private int elementos;
     
     public MapaHash() {
-        this.elementos = 0;
-        this.entradas = inicializarTabla();
+	this.elementos = 0;
+	this.entradas = inicializarTabla();
     }
     
     /**

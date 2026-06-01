@@ -226,10 +226,10 @@ public class ArbolAVL<T extends Comparable<T>>{
 
     private void dfsInOrden(Nodo a) {
 	if (a == null) return;
-
+	
 	dfsInOrden(a.izquierdo);
-    System.out.print(a.elemento);
-    dfsInOrden(a.derecho);
+	System.out.print(a.elemento);
+	dfsInOrden(a.derecho);
     }
     
 }
