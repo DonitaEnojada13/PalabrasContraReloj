@@ -20,6 +20,7 @@ public class Controlador {
         this.diccionario = new MapaHash<>();
         this.palabras = new Palabras();
         this.estadisticas = new Estadisticas();
+	this.puntuacion = new Puntuacion();
     }
 
     public void inicio() {
