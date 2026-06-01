@@ -134,6 +134,7 @@ public class Controlador {
 
         Cronometro cronometro = new Cronometro(60);
         Thread hiloCronometro = new Thread(cronometro);
+        hiloCronometro.setDaemon(true);
         hiloCronometro.start();
 
         while (cronometro.tiempoCorre()) {
